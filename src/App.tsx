@@ -1,21 +1,34 @@
 import React from 'react';
 import Counter from './components/Counter';
+import RLLayout from './components/RLLayout';
+import SpacecraftSelect from './components/SpacecraftSelect';
 
 function App() {
 
   React.useEffect(()=>{
     
-  }, [])
+  }, []);
+  const rockets = ["Test", "Test2"];
+  const rocketSelected = (index: number)=>{
+    console.log("Rocekt..");
+    console.log(rockets[index]);
+  };
   return (
-    <div className="text-clifford flex flex-col justify-center items-center w-full h-full">
-      <h1 className="font-bold text-xl">RL Frontend:</h1>
+    <RLLayout>
+      <div className="relative text-clifford flex flex-col w-full h-full overflow-hidden">
 
-      <p className="font-medium text-lg">Select Rocket:</p>
+        <div className="m-5">
 
-      <Counter />
+          <SpacecraftSelect options={rockets} onOptionSelect={rocketSelected}/>
 
- 
-  </div>
+          <h1 className="text-red-500">{}</h1>
+
+        </div>
+
+      
+    
+      </div>
+    </RLLayout>
   );
 }
 
