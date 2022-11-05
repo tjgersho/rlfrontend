@@ -43,10 +43,10 @@ export const rocketsSlice = createSlice({
   initialState,
   reducers: {
     setRockets: (state, action) => {
-        state = action.payload;
+      return action.payload;
     } 
   },
-})
+});
 
 export const { setRockets } = rocketsSlice.actions
 

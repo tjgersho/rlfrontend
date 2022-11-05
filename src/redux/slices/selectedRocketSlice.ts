@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import rocketsSlice from './rocketsSlice';
  
 
+import {Rocket} from './rocketsSlice';
 
 // Define a type for the slice state
-type SelectedRocketState = {
-    index: number;  
-} | null;
-
+type SelectedRocketState = Rocket | null;
+ 
 // Define the initial state using that type
 const initialState: SelectedRocketState = null;
 
@@ -16,7 +16,7 @@ export const selectedRocketSlice = createSlice({
   initialState,
   reducers: {
     setSelectedRocket: (state, action) => {
-        state = action.payload;
+        return action.payload;
     } 
   },
 })

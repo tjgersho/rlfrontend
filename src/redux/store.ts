@@ -1,12 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 //import RocketReducer from './redux/reducers/RocketReducer';
-import Counter from './slices/counterSlice';
+
 import rocketsSlice from './slices/rocketsSlice';
 import selectedRocketSlice from './slices/selectedRocketSlice';
 const store = configureStore({
   reducer: {
     rockets: rocketsSlice,
-    counter: Counter,
     selectedRocket: selectedRocketSlice
   },
 })

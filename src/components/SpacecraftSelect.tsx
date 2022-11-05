@@ -1,16 +1,16 @@
 import React from 'react';
 
-const SpacecraftSelect = ({options, onOptionSelect}: any) => {
+const SpacecraftSelect = ({rockets, onRocketSelect}: any) => {
 
     const [menuOpen, setMenuOpen] = React.useState(false);
 
 
     const listOptions = ()=>{
-        return options.map((o:string, index: number)=>{
+        return rockets.map((rocket: any)=>{
             return (
                 <li>
                     <div
-                    onClick={()=>{setMenuOpen(false); onOptionSelect(index)}}
+                        onClick={()=>{setMenuOpen(false); onRocketSelect(rocket.id)}}
                         className="
                         dropdown-item
                         text-sm
@@ -25,7 +25,7 @@ const SpacecraftSelect = ({options, onOptionSelect}: any) => {
                         hover:bg-gray-100
                         "
                         >
-                            {o}
+                            {rocket.mission}
                         </div>
                 </li>
             )

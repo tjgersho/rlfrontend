@@ -1,0 +1,1 @@
+export const rocketEndpoint = "http://localhost:8000";
