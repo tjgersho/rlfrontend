@@ -28,7 +28,7 @@ const RLBorder = ({children}: any)=>{
     },[])
    
     React.useEffect(()=>{
-        console.log("Redraw..");
+        
         if(canvasRef.current){
             const canvas = canvasRef.current as HTMLCanvasElement;
             const ctx = canvas.getContext('2d');

@@ -5,21 +5,24 @@ export interface Position {
   X: number,
   Y: number,
   Z: number,
-  created: number
+  created: number,
+  rocket: number
 }
 
 export interface Velocity {
   Vx: number,
   Vy: number,
   Vz: number,
-  created: number
+  created: number,
+  rocket: number
 }
 
 export interface Acceleration {
   Ax: number,
   Ay: number,
   Az: number,
-  created: number
+  created: number,
+  rocket: number
 }
 
 export interface Rocket {

@@ -6,9 +6,9 @@ const SpacecraftSelect = ({rockets, onRocketSelect}: any) => {
 
 
     const listOptions = ()=>{
-        return rockets.map((rocket: any)=>{
+        return rockets.map((rocket: any, index:number)=>{
             return (
-                <li>
+                <li key={"rocket-" + index}>
                     <div
                         onClick={()=>{setMenuOpen(false); onRocketSelect(rocket.id)}}
                         className="

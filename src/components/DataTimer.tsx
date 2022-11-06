@@ -36,7 +36,7 @@ const DataTimer = (props: DataTimerProps)=>{
     }, [isActive, seconds]);
 
     return (
-        <div  className="flex flex-col items-center  mr-10">
+        <div  className="flex flex-col items-center mx-5">
             <button
                 onClick={()=>{doAction(); reset();}} 
                 className="bg-clifford hover:bg-red-500 text-white py-1 px-3 rounded-full">

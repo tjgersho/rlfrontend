@@ -31,10 +31,10 @@ const RocketPlot = (props: any) => {
   const {isVel}= props || false;
   const {isAccl}= props || false;
 
-  console.log("Data in plot");
-  console.log(data);
   
-  const labels = data.map((d:any)=>new Date(d.created).toLocaleTimeString());
+  
+  
+  const labels = data.map((d:any)=>new Date(d.created*1000).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1"));
   let x = [];
   let y = [];
   let z = [];
@@ -56,7 +56,7 @@ const RocketPlot = (props: any) => {
 
 
 
-  console.log(labels);
+  
   
   let structuredData = {
     labels,

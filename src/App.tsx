@@ -13,6 +13,8 @@ import RocketData from './components/RocketData';
 import RocketPlot from './components/RocketPlot';
 import DataTimer from './components/DataTimer';
 
+import runRocketSim from './rocketSim';
+
 const  App = () => {
   const [dataResetTimerTrigger, setDataResetTimerTrigger] = React.useState(0);
   const dispatch = useDispatch();
@@ -24,7 +26,7 @@ const  App = () => {
   const velocities = useSelector((state:any)=>state.velocities);
   const accelerations = useSelector((state:any)=>state.accelerations);
 
- 
+  const [simStarted, setSimStarted] = React.useState(false);
 
   const [dimensions, setDimensions] = React.useState({ 
       height: window.innerHeight,
@@ -33,19 +35,13 @@ const  App = () => {
   
   
   React.useEffect(()=>{
-    //call api to get the 
-    fetch(rocketEndpoint + "/api/rocket/")
-      .then(res=>res.json())
-      .then((data) =>{
-      dispatch(setRockets(data));
-    });
-
+    loadRocketData();
     const handleResize = ()=>{
         setTimeout(()=>{
-            setDimensions({
-                height: window.innerHeight,
-                width: window.innerWidth
-            });
+          setDimensions({
+              height: window.innerHeight,
+              width: window.innerWidth
+          });
         },100);
     }
     
@@ -53,7 +49,7 @@ const  App = () => {
 
     const handleKeyPress = ()=>{
        if(selectedRocket){
-        loadKinematicData(selectedRocket);
+          loadKinematicData(selectedRocket);
        }
     }
 
@@ -66,32 +62,39 @@ const  App = () => {
       
   }, [selectedRocket, dataResetTimerTrigger]);
 
+  const loadRocketData = ()=>{
+    fetch(rocketEndpoint + "/api/rocket/")
+      .then(res=>res.json())
+      .then((data) =>{
+      dispatch(setRockets(data));
+    });
+  };
   const loadKinematicData = (rocketSelect: Rocket) =>{
  
     fetch(rocketEndpoint + "/api/position/rocket/" + rocketSelect.id + "/")
     .then(res=>res.json())
       .then((data) =>{
-        console.log("Position;:::");
-      console.log(data);
+        
+      
       dispatch(setSelectedPositions(data));
     });
 
     fetch(rocketEndpoint + "/api/velocity/rocket/" + rocketSelect.id + "/")
     .then(res=>res.json())
       .then((data) =>{
-        console.log("Velocity;:::");
-      console.log(data);
+        
+      
       dispatch(setSelectedVelocities(data));
     });
 
     fetch(rocketEndpoint + "/api/acceleration/rocket/" + rocketSelect.id + "/")
     .then(res=>res.json())
       .then((data) =>{
-        console.log("Acceleration;:::");
-      console.log(data);
+        
+      
       dispatch(setSelectedAccelerations(data));
-      console.log("Reset Timer Trigger");
-      console.log((dataResetTimerTrigger+1));
+      
+      
       
       setDataResetTimerTrigger((dataResetTimerTrigger+1));
     });
@@ -100,11 +103,13 @@ const  App = () => {
 
   const reloadData = ()=>{
     if(selectedRocket){
+      loadRocketData();
       loadKinematicData(selectedRocket);
     }
   };
   
   const rocketSelected = (id: number)=>{
+    setSimStarted(false);
     const rocketSelect = rockets.find((r:any)=>r.id==id);
     dispatch(setSelectedRocket(rocketSelect));
     loadKinematicData(rocketSelect);
@@ -112,9 +117,27 @@ const  App = () => {
 
   const getChartWidth = ()=>{
     const width = Math.round(dimensions.width/3.4);
-
     return width < 250 ? "80%" : width + "px";
   };
+ 
+  const clearData = () =>{
+    fetch(rocketEndpoint + "/api/rocket/" +selectedRocket.id+ "/data/", {method: 'DELETE'});
+    setTimeout(()=>{
+      loadKinematicData(selectedRocket);
+    },500);
+  };
+
+  const runSim = async () =>{
+    setSimStarted(true);
+    clearData();
+    await runRocketSim(selectedRocket.id);
+  };
+
+
+  let activeRocket = null;
+  if(selectedRocket){
+    activeRocket = rockets.find((r:any)=>r.id==selectedRocket.id);
+  }
 
   return (
     <RLLayout>
@@ -124,22 +147,21 @@ const  App = () => {
 
           <SpacecraftSelect rockets={rockets} onRocketSelect={rocketSelected}/>
 
-          {selectedRocket?
-
-            <RocketData selectedRocket={selectedRocket} />
- 
+          {activeRocket?
+            <>
+              <RocketData selectedRocket={activeRocket} />
+              <div className="self-center">
+                <DataTimer  doReset={dataResetTimerTrigger} doAction={reloadData}/>
+              </div>
+            </>
           :null}
 
         </div>
-        <div className="flex justify-end items-start grow">
-         {selectedRocket?
-            <DataTimer  doReset={dataResetTimerTrigger} doAction={reloadData}/>
-         :null}
-        </div>
+        
 
-        {selectedRocket?
+        {activeRocket?
        
-          <div className="flex justify-between grow m-5 flex-wrap overflow-auto scrollbar-custom">
+          <div className="flex items-center justify-between grow m-5 flex-wrap overflow-auto scrollbar-custom">
             <div className={`flex jusify-between m-2 w-[${getChartWidth()}]`}>
               <RocketPlot data={positions} title={"Position"} isPos/>
             </div>
@@ -151,6 +173,28 @@ const  App = () => {
             </div>
           </div>
         :null}
+
+      {activeRocket?
+        <div className="flex justify-between">
+
+            <button
+                onClick={()=>{clearData();}} 
+                disabled={simStarted}
+                className={`py-1 px-3 m-5 rounded-full text-white bg-clifford hover:bg-red-500`}>
+                  <span>Clear Data</span>
+            </button>
+            <button
+                onClick={()=>{runSim();}} 
+                disabled={simStarted}
+                className={`py-1 px-3 m-5 rounded-full ${simStarted ? "text-gray bg-black cursor-default" : "text-white bg-clifford hover:bg-red-500 "}`}>
+                {!simStarted ? 
+                  <span>Run Sim</span>
+                  : 
+                  <span>Sim Running</span>
+                }
+            </button>
+        </div> 
+     :null}
     
       </div>
     </RLLayout>
