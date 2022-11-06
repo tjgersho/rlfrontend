@@ -2,11 +2,19 @@ import { configureStore } from '@reduxjs/toolkit'
 //import RocketReducer from './redux/reducers/RocketReducer';
 
 import rocketsSlice from './slices/rocketsSlice';
+import selectedAccelerationsSlice from './slices/selectedAccelerationsSlice';
+import selectedPositionsSlice from './slices/selectedPositionsSlice';
 import selectedRocketSlice from './slices/selectedRocketSlice';
+import selectedVelocitiesSlice from './slices/selectedVelocitiesSlice';
+
+
 const store = configureStore({
   reducer: {
     rockets: rocketsSlice,
-    selectedRocket: selectedRocketSlice
+    selectedRocket: selectedRocketSlice,
+    positions: selectedPositionsSlice,
+    velocities: selectedVelocitiesSlice,
+    accelerations: selectedAccelerationsSlice
   },
 })
 

@@ -12,17 +12,19 @@ const RLBorder = ({children}: any)=>{
 
     React.useEffect(() => {
         const handleResize = ()=>{
-          setDimensions({
-            height: window.innerHeight,
-            width: window.innerWidth
-          });
+            setTimeout(()=>{
+                setDimensions({
+                    height: window.innerHeight,
+                    width: window.innerWidth
+                });
+            },100);
         }
-    
-      window.addEventListener('resize', handleResize)
+        
+        window.addEventListener('resize', handleResize)
 
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     },[])
    
     React.useEffect(()=>{
@@ -60,7 +62,7 @@ const RLBorder = ({children}: any)=>{
     }, [canvasRef.current, dimensions])
 
 return (
-    <>
+    <div className="overflow-hidden w-full h-full">
         <canvas 
             ref={canvasRef}
             width={window.innerWidth}
@@ -69,7 +71,7 @@ return (
             />
 
         {children}
-    </>
+    </div>
 );
 
 };
